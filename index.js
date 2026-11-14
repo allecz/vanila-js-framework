@@ -1,16 +1,37 @@
 import { createElement, render } from "./framework/index.js";
 
-const card = createElement(
-  "div",
-  { className: "card", id: "closures" },
-  createElement("h2", null, "Topic: Closures"),
-  createElement("p", null, "Încredere: ", 4, " / 5"),
+const TopicTitle = (props) => createElement("h2", null, "Topic: ", props.name);
+
+const Confidence = (props) =>
   createElement(
-    "ul",
-    null,
-    createElement("li", null, "Recapitulat azi"),
-    createElement("li", null, "Următoarea: peste ", 14, " zile"),
-  ),
+    "p",
+    { className: "confidence" },
+    "Încredere: ",
+    props.level,
+    " / 5",
+  );
+
+const TopicCard = (props) =>
+  createElement(
+    "div",
+    { className: "card" },
+    createElement(TopicTitle, { name: props.name }),
+    createElement(Confidence, { level: props.level }),
+  );
+
+const Panel = (props) =>
+  createElement(
+    "section",
+    { className: "panel" },
+    createElement("h1", null, props.title),
+    createElement("div", { className: "panel-body" }, ...props.children),
+  );
+
+const app = createElement(
+  Panel,
+  { title: "De recapitulat azi" },
+  createElement(TopicCard, { name: "Closures", level: 4 }),
+  createElement(TopicCard, { name: "Event loop", level: 2 }),
 );
 
-render(card, document.getElementById("root"));
+render(app, document.getElementById("root"));

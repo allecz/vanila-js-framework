@@ -2,8 +2,13 @@ import getCurrentTypeForError from "./utils/get-current-type-for-error.js";
 
 const getElementFromDescription = (description) => {
   if (typeof description === "string" || typeof description === "number") {
-    const element = document.createTextNode(description.toString());
-    return element;
+    return document.createTextNode(description.toString());
+  }
+
+  if (typeof description.type === "function") {
+    const normalizedDescription = description.type(description.props);
+
+    return getElementFromDescription(normalizedDescription);
   }
 
   const element = document.createElement(description.type);
