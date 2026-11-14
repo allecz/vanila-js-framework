@@ -1,1 +1,1 @@
-wdasd
+console.log("test")
