@@ -1,5 +1,35 @@
 import getCurrentTypeForError from "./utils/get-current-type-for-error.js";
 
+const isEventProp = (key, value) => {
+  if (/^on[A-Z]/.test(key) && typeof value === "function") {
+    return true;
+  }
+
+  return false;
+};
+
+const assignProperties = (element, props) => {
+  const normalizedProps = {};
+
+  for (const [key, value] of Object.entries(props)) {
+    if (key === "style") {
+      for (const [styleKey, styleValue] of Object.entries(props.style)) {
+        element.style[styleKey] = styleValue;
+      }
+    } else if (isEventProp(key, value)) {
+      element[key.toLowerCase()] = value;
+    } else if (key in element) {
+      normalizedProps[key] = value;
+    } else {
+      element.setAttribute(key, value);
+    }
+  }
+
+  Object.assign(element, normalizedProps);
+
+  return element;
+};
+
 const getElementFromDescription = (description) => {
   if (typeof description === "string" || typeof description === "number") {
     return document.createTextNode(description.toString());
@@ -13,7 +43,7 @@ const getElementFromDescription = (description) => {
 
   const element = document.createElement(description.type);
   const { children, ...props } = description.props;
-  Object.assign(element, props);
+  assignProperties(element, props);
 
   for (const child of children) {
     element.appendChild(getElementFromDescription(child));

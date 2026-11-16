@@ -1,37 +1,33 @@
 import { createElement, render } from "./framework/index.js";
 
-const TopicTitle = (props) => createElement("h2", null, "Topic: ", props.name);
-
-const Confidence = (props) =>
-  createElement(
-    "p",
-    { className: "confidence" },
-    "Încredere: ",
-    props.level,
-    " / 5",
-  );
-
-const TopicCard = (props) =>
+const Toolbar = () =>
   createElement(
     "div",
-    { className: "card" },
-    createElement(TopicTitle, { name: props.name }),
-    createElement(Confidence, { level: props.level }),
+    {
+      className: "toolbar",
+      style: { display: "flex", gap: "8px", backgroundColor: "#222" },
+    },
+
+    // F4.1: handler de click
+    createElement(
+      "button",
+      { onClick: () => console.log("Salvat!") },
+      "Salvează",
+    ),
+
+    // F4.3: atribute booleene
+    createElement("button", { disabled: true }, "Șterge"),
+    createElement("button", { disabled: false }, "Editează"),
+    createElement("input", { type: "checkbox", checked: true }),
+
+    // F4.2: atribute obișnuite, inclusiv cele fără proprietate DOM
+    createElement("input", {
+      type: "text",
+      placeholder: "Caută topic...",
+      "aria-label": "Caută topic",
+      "data-testid": "search",
+    }),
+    createElement("label", { htmlFor: "search" }, "Caută"),
   );
 
-const Panel = (props) =>
-  createElement(
-    "section",
-    { className: "panel" },
-    createElement("h1", null, props.title),
-    createElement("div", { className: "panel-body" }, ...props.children),
-  );
-
-const app = createElement(
-  Panel,
-  { title: "De recapitulat azi" },
-  createElement(TopicCard, { name: "Closures", level: 4 }),
-  createElement(TopicCard, { name: "Event loop", level: 2 }),
-);
-
-render(app, document.getElementById("root"));
+render(createElement(Toolbar, null), document.getElementById("root"));
